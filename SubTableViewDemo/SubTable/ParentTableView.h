@@ -6,6 +6,18 @@
 //  Copyright © 2015 ArcTech. All rights reserved.
 //
 
+/**
+ * ParentTableView is main tableView that will display ParentTableViewCell.
+ * Eeach ParentTableViewCell will have a SubTableViewCell which act as a cell in ParentTableView.
+ * Each SubTableViewCell have a tableView that will have many of ChildTableViewCell.
+ *
+ * ParentTableView --
+ *                            --ParentTableViewCell
+ *                            --SubTableViewCell --
+ *                                                             --UITableView --
+ *                                                                                    --ChildTableViewCell
+ */
+
 #import <UIKit/UIKit.h>
 #import "SubTableViewCell.h"
 
@@ -16,11 +28,29 @@
 @protocol ParentTableViewDelegate <NSObject>
 
 @required
+/**
+ * How many parent cell in tableView
+ */
 - (NSInteger)numberOfParentCellIsInTableView:(ParentTableView *)tableView;
+
+/**
+ * The parent cell at index
+ */
 - (UITableViewCell *)tableView:(ParentTableView *)tableView parentCellForRowAtIndex:(NSInteger)index;
+
+/**
+ * The sub cell under parent cell index
+ */
 - (UITableViewCell *)tableView:(ParentTableView *)tableView subCellRowUnderParentIndex:(NSInteger)parentIndex;
 
+/**
+ * Number of child cell under parent index
+ */
 - (NSInteger)numberOfChildrenCellUnderParentIndex:(NSInteger)parentIndex;
+
+/**
+ * Child cell for index in sub cell and under certain parent index
+ */
 - (UITableViewCell *)tableView:(UITableView *)tableView childCellForRowAtIndex:(NSInteger)childIndex underParentIndex:(NSInteger)parentIndex;
 
 
