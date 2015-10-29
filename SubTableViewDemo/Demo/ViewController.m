@@ -243,6 +243,12 @@
 - (void)onPanRightAtCellIndex:(NSInteger)index{
     
     NSLog(@"complete at index %li", (long)index);
+    
+    id obj = [dataArray objectAtIndex:index];
+    [dataArray removeObjectAtIndex:index];
+    [dataArray addObject:obj];
+    
+    [_tableView moveRowAtIndex:index toIndex:[dataArray count]-1];
 }
 
 #pragma mark - SingleTap delegate

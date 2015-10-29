@@ -60,17 +60,18 @@
     [self setDataSource:self];
     [self setDelegate:self];
     
-    [self setBackgroundColor:[UIColor whiteColor]];
-    
     [self initExpansionStates];
     
+    //register notification for device orientation change
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(deviceOrientationDidChange:) name: UIDeviceOrientationDidChangeNotification object: nil];
 }
 
 - (void)initExpansionStates{
     
+    //init expand/collapse states for each parent cell
     _expansionStates = [[NSMutableArray alloc] initWithCapacity:[_theDelegate numberOfParentCellIsInTableView:self]];
     
+    //set all states to NO
     for(int i=0; i<[_theDelegate numberOfParentCellIsInTableView:self]; i++){
         
         [_expansionStates addObject:@"NO"];
@@ -80,9 +81,11 @@
 #pragma mark - Table interaction
 - (void)expandForParentAtRow:(NSInteger)row {
     
+    //get parent index
     NSUInteger parentIndex = [self parentIndexForRow:row];
 
     
+    //return if state is already expanded
     if ([[_expansionStates objectAtIndex:parentIndex] boolValue]) {
         return;
     }
@@ -91,10 +94,13 @@
     [_expansionStates replaceObjectAtIndex:parentIndex withObject:@"YES"];
     [self insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:(row + 1) inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
     
+    //set tableView to editing mode
     _isOnEditing = YES;
     
+    //we need to adjust expanded sub cell in case it is out of screen
     [self adjustSubCellAtIndex:row+1];
     
+    //tell delegate a parent cell has been expanded
     if([_theDelegate respondsToSelector:@selector(tableView:didExpandForParentCellAtIndex:withSubCellIndex:)]){
         
         [_theDelegate tableView:self didExpandForParentCellAtIndex:parentIndex withSubCellIndex:row+1];
@@ -104,13 +110,15 @@
 
 - (void)collapseForParentAtRow:(NSInteger)row {
     
+    //return if number of parent cell is less or equal to 0
     if (![_theDelegate numberOfParentCellIsInTableView:self] > 0) {
         return;
     }
     
+    //find parent index
     NSUInteger parentIndex = [self parentIndexForRow:row];
 
-    
+    //if it is already collapsed then return
     if (![[_expansionStates objectAtIndex:parentIndex] boolValue]) {
         return;
     }
@@ -119,23 +127,39 @@
     [_expansionStates replaceObjectAtIndex:parentIndex withObject:@"NO"];
     [self deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:(row + 1) inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
     
+    //set tableView to not editing mode
     _isOnEditing = NO;
     
+    //tell delegate parent cell collapsed
     if([_theDelegate respondsToSelector:@selector(tableView:didCollapseForParentCellAtIndex:withSubCellIndex:)]){
         
         [_theDelegate tableView:self didCollapseForParentCellAtIndex:parentIndex withSubCellIndex:row+1];
     }
 }
 
+/**
+ * Adjust expanded sub cell
+ * it will automatically adjust all table position and make sure
+ * sub cell do not out side of screen
+ */
 - (void)adjustSubCellAtIndex:(NSInteger)rowIndex{
     
+    //sub cell index
     NSInteger row = rowIndex;
+    
+    //parent index of this sub cell
     NSUInteger parentIndex = [self parentIndexForRow:row];
     
+    //default sub cell height is 44
     CGFloat cellheight = 44.0f;
+    
+    //get sub cell
     SubTableViewCell *cell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
+    
+    //sub cell origin y
     CGFloat cellOriginY = cell.frame.origin.y;
     
+    //if sub cell not found we use parent cell's bottom edge as sub cell's origin y
     if(cell == nil){
         
         ParentTableViewCell *pCell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:parentIndex inSection:0]];
@@ -143,14 +167,19 @@
         cellOriginY = pCell.frame.origin.y + pCell.bounds.size.height;
     }
     
+    //ask delegate for sub cell height
     if([_theDelegate respondsToSelector:@selector(tableView:subCellHeightForRowAtIndex:underParentIndex:)]){
         
         cellheight = [_theDelegate tableView:self subCellHeightForRowAtIndex:row underParentIndex:parentIndex];
     }
     
+    //find sub cell's bottom edge
     CGFloat cellBottomEdge = cellOriginY +cellheight;
+    
+    //find visible height
     CGFloat visibleHeight = self.contentOffset.y + self.bounds.size.height;
     
+    //check if sub cell is out of screen if so scroll tableview make sub cell visible
     if(cellBottomEdge > visibleHeight){
         
         [self scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
@@ -483,8 +512,11 @@
 
 - (void)insertNewRowAtIndex:(NSInteger)index withAnimation:(UITableViewRowAnimation)anim;{
     
+    [self collapseAllRows];
+    
     [_expansionStates insertObject:@"NO" atIndex:0];
     
+    //update parent index
     for(ParentTableViewCell *cell in [self visibleCells]){
         
         if(cell.parentIndex >= index)
@@ -496,8 +528,11 @@
 
 - (void)deleteRowAtIndex:(NSInteger)index withAnimation:(UITableViewRowAnimation)anim{
     
+    [self collapseAllRows];
+    
     [_expansionStates removeObjectAtIndex:index];
     
+    //update parent index
     for(ParentTableViewCell *cell in [self visibleCells]){
         
         if(cell.parentIndex >= index)
@@ -505,6 +540,35 @@
     }
     
     [self deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:anim];
+}
+
+- (void)moveRowAtIndex:(NSInteger)targetIndex toIndex:(NSInteger)destIndex{
+    
+    [self collapseAllRows];
+    
+    int offset = 0;
+    if(targetIndex < destIndex){
+        
+        offset = -1;
+    }
+    else if(targetIndex > destIndex){
+        
+        offset = 1;
+    }
+    
+    //update parent index
+    for(ParentTableViewCell *cell in [self visibleCells]){
+        
+        if(cell.parentIndex > targetIndex && cell.parentIndex <= destIndex){
+            
+            cell.parentIndex += offset;
+        }
+    }
+    
+    ParentTableViewCell *targetCell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:targetIndex inSection:0]];
+    targetCell.parentIndex = destIndex;
+    
+    [self moveRowAtIndexPath:[NSIndexPath indexPathForRow:targetIndex inSection:0] toIndexPath:[NSIndexPath indexPathForRow:destIndex inSection:0]];
 }
 
 #pragma mark - UITableViewDataSource

@@ -55,15 +55,31 @@
 
 
 @optional
+/**
+ * Parent cell height at index default is 44
+ */
 - (CGFloat)tableView:(ParentTableView *)tableView parentCellHeightForRowAtIndex:(NSInteger )index;
+
+/**
+ *Sub cell height at index  default is 44
+ */
 - (CGFloat)tableView:(ParentTableView *)tableView subCellHeightForRowAtIndex:(NSInteger)index underParentIndex:(NSInteger)parentIndex;
 
 /**
  * Return YES to allow parent cell to be expand otherwise NO
  */
 - (BOOL)tableView:(ParentTableView *)tableView canExpandSubCellForRowAtIndex:(NSInteger)index;
+
 //- (void)tableView:(ParentTableView *)tableView didSelectRowAtIndex:(NSInteger)index;
+
+/**
+ * Parent cell expend at index
+ */
 - (void)tableView:(ParentTableView *)tableView didExpandForParentCellAtIndex:(NSInteger)index withSubCellIndex:(NSInteger)subIndex;
+
+/**
+ * Parent cell collapse at index
+ */
 - (void)tableView:(ParentTableView *)tableView didCollapseForParentCellAtIndex:(NSInteger)index withSubCellIndex:(NSInteger)subIndex;
 
 //- (void)tableView:(UITableView *)tableView didSelectRowAtChildIndex:(NSInteger)childIndex underParentIndex:(NSInteger)parentIndex;
@@ -88,11 +104,30 @@
  * Determine whether tableView is in editing mode or not
  */
 @property (getter=getIsOnEdit, nonatomic) BOOL isOnEdit;
+
+/**
+ * YES to make tableView interactable otherwise NO
+ */
 @property (setter=setInteractionEnable:, nonatomic) BOOL interactionEnable;
 
+/**
+ * Collapse all parent cells
+ */
 - (void)collapseAllRows;
+
+/**
+ * Exapnd a parent cell
+ */
 - (BOOL)expandForParentCellAtIndex:(NSInteger)index;
+
+/**
+ * Return YES if parent cell at index can be expanded otherwise NO
+ */
 - (BOOL)canExpandParentCellAtIndex:(NSInteger)index;
+
+/**
+ * Return a new tableView cell that was designed in xib
+ */
 - (UITableViewCell *)cellViewFromNib:(NSString *)nibName atViewIndex:(NSUInteger)viewIndex;
 
 /**
@@ -143,4 +178,7 @@
  * You must delete data from your data source before calling this method
  */
 - (void)deleteRowAtIndex:(NSInteger)index withAnimation:(UITableViewRowAnimation)anim;
+
+- (void)moveRowAtIndex:(NSInteger)targetIndex toIndex:(NSInteger)destIndex;
+
 @end
