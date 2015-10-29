@@ -40,6 +40,7 @@
 		CE001C8C1BE0D1220062090E /* SubTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE001C7A1BE0D1220062090E /* SubTableViewCell.m */; };
 		CE001C8D1BE0D1220062090E /* SubTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE001C7B1BE0D1220062090E /* SubTableViewCell.xib */; };
 		CE0F39381BE1D00E00795607 /* TaskItem.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0F39371BE1D00E00795607 /* TaskItem.m */; };
+		CE0F393D1BE20C8E00795607 /* LongPressMove.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0F393C1BE20C8E00795607 /* LongPressMove.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +119,8 @@
 		CE001C7B1BE0D1220062090E /* SubTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubTableViewCell.xib; sourceTree = "<group>"; };
 		CE0F39361BE1D00E00795607 /* TaskItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskItem.h; sourceTree = "<group>"; };
 		CE0F39371BE1D00E00795607 /* TaskItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskItem.m; sourceTree = "<group>"; };
+		CE0F393B1BE20C8E00795607 /* LongPressMove.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LongPressMove.h; sourceTree = "<group>"; };
+		CE0F393C1BE20C8E00795607 /* LongPressMove.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LongPressMove.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,6 +255,7 @@
 		CE001C551BE0D1220062090E /* Gestures */ = {
 			isa = PBXGroup;
 			children = (
+				CE0F393A1BE20C6800795607 /* LongPressMove */,
 				CE001C561BE0D1220062090E /* DoubleTapEdit */,
 				CE001C5C1BE0D1220062090E /* DoublTap */,
 				CE001C5F1BE0D1220062090E /* LongPress */,
@@ -351,6 +355,15 @@
 				CE001C781BE0D1220062090E /* ChildTableViewCell.xib */,
 			);
 			path = ChildCell;
+			sourceTree = "<group>";
+		};
+		CE0F393A1BE20C6800795607 /* LongPressMove */ = {
+			isa = PBXGroup;
+			children = (
+				CE0F393B1BE20C8E00795607 /* LongPressMove.h */,
+				CE0F393C1BE20C8E00795607 /* LongPressMove.m */,
+			);
+			path = LongPressMove;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -493,6 +506,7 @@
 			files = (
 				CE001C8A1BE0D1220062090E /* ChildTableViewCell.m in Sources */,
 				CE001C861BE0D1220062090E /* SingleTap.m in Sources */,
+				CE0F393D1BE20C8E00795607 /* LongPressMove.m in Sources */,
 				CE001C8C1BE0D1220062090E /* SubTableViewCell.m in Sources */,
 				CE001C831BE0D1220062090E /* PDANCellHolder.m in Sources */,
 				CE001C801BE0D1220062090E /* DoubleTap.m in Sources */,
