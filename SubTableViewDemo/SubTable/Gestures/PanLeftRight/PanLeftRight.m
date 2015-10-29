@@ -75,6 +75,27 @@
             cellIndex = [_tableView indexPathForCell:_tempCell].row;
         }
         
+        if(translate.x < 0){
+            
+            if([self.delegate respondsToSelector:@selector(canPanLeftAtCellIndex:)]){
+                
+                if(![self.delegate canPanLeftAtCellIndex:cellIndex]){
+                    
+                    return NO;
+                }
+            }
+        }
+        else if(translate.x > 0){
+            
+            if([self.delegate respondsToSelector:@selector(canPanRightAtCellIndex:)]){
+                
+                if(![self.delegate canPanRightAtCellIndex:cellIndex]){
+                    
+                    return NO;
+                }
+            }
+        }
+        
         //if tableView is in edit mode
         if(_tableView.isOnEdit){
             
@@ -199,15 +220,22 @@
                 [UIView animateWithDuration:0.2
                                  animations:^{
                                      _tempCell.frame = originalFrame;
+                                 }completion:^(BOOL finished){
+                                     
+                                     if(finished){
+                                         
+                                         //tell delegate pan left
+                                         if([self.delegate respondsToSelector:@selector(onPanLeftAtCellIndex:)]){
+                                             
+                                             [self.delegate onPanLeftAtCellIndex:_cellIndex];
+                                         }
+                                     }
+                                     
                                  }
                  ];
             }
             
-            //tell delegate pan left
-            if([self.delegate respondsToSelector:@selector(onPanLeftAtCellIndex:)]){
-                
-                [self.delegate onPanLeftAtCellIndex:_cellIndex];
-            }
+            
             
         }
         else if(_rightOnDragRelease){
@@ -218,15 +246,22 @@
                 [UIView animateWithDuration:0.2
                                  animations:^{
                                      _tempCell.frame = originalFrame;
+                                 }completion:^(BOOL finished){
+                                     
+                                     if(finished){
+                                         
+                                         //tell delegate pan right
+                                         if([self.delegate respondsToSelector:@selector(onPanRightAtCellIndex:)]){
+                                             
+                                             [self.delegate onPanRightAtCellIndex:_cellIndex];
+                                         }
+                                     }
+                                     
                                  }
                  ];
             }
             
-            //tell delegate pan right
-            if([self.delegate respondsToSelector:@selector(onPanRightAtCellIndex:)]){
-                
-                [self.delegate onPanRightAtCellIndex:_cellIndex];
-            }
+            
         }
         else
         {

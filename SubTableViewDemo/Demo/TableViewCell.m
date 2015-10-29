@@ -8,7 +8,10 @@
 
 #import "TableViewCell.h"
 
-@implementation TableViewCell
+@implementation TableViewCell{
+    
+    BOOL _isComplete;
+}
 
 @synthesize titleLabel = _titleLabel;
 @synthesize completeLabel = _completeLabel;
@@ -20,6 +23,25 @@
     _deleteLabel.text = @"\u2717";
 
 
+}
+
+- (BOOL)isComplete{
+    
+    return _isComplete;
+}
+
+- (void)setIsComplete:(BOOL)isComplete{
+    
+    _isComplete = isComplete;
+    
+    if(isComplete){
+        
+        self.backgroundColor = [UIColor greenColor];
+    }
+    else{
+        
+        self.backgroundColor = [UIColor clearColor];
+    }
 }
 
 

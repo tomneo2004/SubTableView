@@ -33,6 +33,16 @@
  */
 - (void)onPanningRightWithDelta:(CGFloat)delta AtCellIndex:(NSInteger)index;
 
+/**
+ * Return YES to allow pan left otherwise NO
+ */
+- (BOOL)canPanLeftAtCellIndex:(NSInteger)index;
+
+/**
+ * Return YES to allow pan right otherwise NO
+ */
+- (BOOL)canPanRightAtCellIndex:(NSInteger)index;
+
 
 @end
 

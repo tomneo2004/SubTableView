@@ -12,6 +12,7 @@
 @protocol DoubleTapEditDelegate <NSObject>
 
 @optional
+- (BOOL)canStartEditAtIndex:(NSInteger)index;
 - (NSString *)nameForItemAtIndex:(NSInteger)index;
 - (void)onDoubleTapEditCompleteAtIndex:(NSInteger)index withItemName:(NSString *)name;
 

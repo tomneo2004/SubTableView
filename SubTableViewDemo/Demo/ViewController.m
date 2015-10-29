@@ -10,6 +10,7 @@
 #import "TableViewCell.h"
 #import "SubTableCell.h"
 #import "ChildTableCell.h"
+#import "TaskItem.h"
 
 @interface ViewController ()
 
@@ -20,6 +21,9 @@
 @implementation ViewController{
     
     NSMutableArray *dataArray;
+    CGFloat parentCellHeight;
+    CGFloat subCellHeight;
+    CGFloat childCellHeight;
 }
 
 @synthesize tableView = _tableView;
@@ -29,29 +33,29 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     dataArray = [[NSMutableArray alloc] initWithObjects:
-                 @"a",
-                 @"b",
-                 @"c",
-                 @"cvvv",
-                 @"caaa",
-                 @"ceee",
-                 @"cttt",
-                 @"cwww",
-                 @"cqqq",
-                 @"czzz",
-                 @"cbbb",
-                 @"c11212",
-                 @"cuuu",
-                 @"ciiiiiii",
-                 @"coooooo",
-                 @"cpppppp",
-                 @"cllllllllll",
-                 @"chhhhhh",
-                 @"cgggggg",
-                 @"cnnnnnnn",
-                 @"cbbbbbbb",
-                 @"cmmmmmm",
-                 @"ckkkkkkkkk",
+                 [TaskItem newItemWithName:@"a"],
+                 [TaskItem newItemWithName:@"aiiiiq"],
+                 [TaskItem newItemWithName:@"bnmmhh"],
+                 [TaskItem newItemWithName:@"pooooop"],
+                 [TaskItem newItemWithName:@"qyyyyyyy"],
+                 [TaskItem newItemWithName:@"cccccccc"],
+                 [TaskItem newItemWithName:@"mm"],
+                 [TaskItem newItemWithName:@"gggggg"],
+                 [TaskItem newItemWithName:@"iuiuia"],
+                 [TaskItem newItemWithName:@"rttttttr"],
+                 [TaskItem newItemWithName:@"a2222333"],
+                 [TaskItem newItemWithName:@"iiiuuuyyyttt"],
+                 [TaskItem newItemWithName:@"dsdddddd"],
+                 [TaskItem newItemWithName:@"xxxxxxxx"],
+                 [TaskItem newItemWithName:@"zzzzzzzzz"],
+                 [TaskItem newItemWithName:@"cpppppp"],
+                 [TaskItem newItemWithName:@"ddsddddd"],
+                 [TaskItem newItemWithName:@"eeeerrrrrrr"],
+                 [TaskItem newItemWithName:@"yyyyyyyyy"],
+                 [TaskItem newItemWithName:@"ahhhhhhh"],
+                 [TaskItem newItemWithName:@"jjkjkkkkkkk"],
+                 [TaskItem newItemWithName:@"lllllalllllallll"],
+                 [TaskItem newItemWithName:@"tttttttt"],
                  nil];
     
     _tableView.theDelegate = self;
@@ -87,6 +91,15 @@
     PullDownAddNew *pullAddNew = [[PullDownAddNew alloc] initWithTableView:_tableView WithPriority:0];
     pullAddNew.delegate = self;
     [_tableView addGestureComponent:pullAddNew];
+    
+    TableViewCell *pCell = (TableViewCell *)[_tableView cellViewFromNib:@"TableViewCell" atViewIndex:0];
+    parentCellHeight = pCell.bounds.size.height;
+    
+    SubTableCell *sCell = (SubTableCell *)[_tableView cellViewFromNib:@"SubTableCell" atViewIndex:0];
+    subCellHeight = sCell.bounds.size.height;
+    
+    ChildTableCell *cCell = (ChildTableCell *)[_tableView cellViewFromNib:@"ChildTableCell" atViewIndex:0];
+    childCellHeight = cCell.bounds.size.height;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -111,13 +124,23 @@
         cell = (TableViewCell *)[tableView cellViewFromNib:@"TableViewCell" atViewIndex:0];
     }
     
-    cell.titleLabel.text = (NSString *)[dataArray objectAtIndex:index];
+    TaskItem *item = [dataArray objectAtIndex:index];
+    
+    cell.titleLabel.text = item.itemName;
+    
+    cell.isComplete = item.isComplete;
+    
     
     return cell;
     
 }
 
 - (BOOL)tableView:(ParentTableView *)tableView canExpandSubCellForRowAtIndex:(NSInteger)index{
+    
+    TaskItem *item = [dataArray objectAtIndex:index];
+    
+    if(item.isComplete)
+        return NO;
     
     return YES;
 }
@@ -138,23 +161,33 @@
 
 - (CGFloat)tableView:(ParentTableView *)tableView parentCellHeightForRowAtIndex:(NSInteger)index{
     
+    /*
     TableViewCell *cell = (TableViewCell *)[tableView cellViewFromNib:@"TableViewCell" atViewIndex:0];
     
     return cell.bounds.size.height;
+     */
+    
+    return parentCellHeight;
 }
 
 - (CGFloat)tableView:(ParentTableView *)tableView subCellHeightForRowAtIndex:(NSInteger)index underParentIndex:(NSInteger)parentIndex{
     
+    /*
     SubTableCell *cell = (SubTableCell *)[tableView cellViewFromNib:@"SubTableCell" atViewIndex:0];
     
     return cell.bounds.size.height;
+     */
+    return subCellHeight;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView childCellHeightForRowAtChildIndex:(NSInteger)childIndex underParentIndex:(NSInteger)parentIndex{
     
+    /*
     ChildTableCell *cell = (ChildTableCell *)[_tableView cellViewFromNib:@"ChildTableCell" atViewIndex:0];
     
     return cell.bounds.size.height;
+     */
+    return childCellHeight;
 }
 
 - (NSInteger)numberOfChildrenCellUnderParentIndex:(NSInteger)parentIndex{
@@ -232,12 +265,52 @@
     }
 }
 
+- (BOOL)canPanLeftAtCellIndex:(NSInteger)index{
+    
+    return YES;
+}
+
+- (BOOL)canPanRightAtCellIndex:(NSInteger)index{
+    
+    TaskItem *item = [dataArray objectAtIndex:index];
+    
+    if(item.isComplete){
+        
+        return NO;
+    }
+    
+    return YES;
+}
+
 - (void)onPanLeftAtCellIndex:(NSInteger)index{
     
-    NSLog(@"delete at index %li", (long)index);
     
-    [dataArray removeObjectAtIndex:index];
-    [_tableView deleteRowAtIndex:index withAnimation:UITableViewRowAnimationFade];
+    
+    TaskItem *item = [dataArray objectAtIndex:index];
+    
+    if(item.isComplete){
+        
+        NSLog(@"recover at index %li", (long)index);
+        
+        item.isComplete = NO;
+        
+        [dataArray removeObjectAtIndex:index];
+        
+        [dataArray insertObject:item atIndex:0];
+        
+        TableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+        cell.isComplete = NO;
+        
+        [_tableView moveRowAtIndex:index toIndex:0];
+    }
+    else{
+        
+        NSLog(@"delete at index %li", (long)index);
+        
+        [dataArray removeObjectAtIndex:index];
+        [_tableView deleteRowAtIndex:index withAnimation:UITableViewRowAnimationFade];
+    }
+    
 }
 
 - (void)onPanRightAtCellIndex:(NSInteger)index{
@@ -245,10 +318,16 @@
     NSLog(@"complete at index %li", (long)index);
     
     id obj = [dataArray objectAtIndex:index];
+    ((TaskItem *)obj).isComplete = YES;
     [dataArray removeObjectAtIndex:index];
     [dataArray addObject:obj];
     
+    TableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+    cell.isComplete = YES;
+    
+    
     [_tableView moveRowAtIndex:index toIndex:[dataArray count]-1];
+    
 }
 
 #pragma mark - SingleTap delegate
@@ -273,20 +352,27 @@
 - (void)addNewItemWithText:(NSString *)text{
     
     NSLog(@"add new item %@", text);
-    [dataArray insertObject:text atIndex:0];
+    [dataArray insertObject:[TaskItem newItemWithName:text] atIndex:0];
     
     [_tableView insertNewRowAtIndex:0 withAnimation:UITableViewRowAnimationTop];
 }
 
 #pragma mark - DoubleTapEdit delegate
+- (BOOL)canStartEditAtIndex:(NSInteger)index{
+    
+    TaskItem *item = [dataArray objectAtIndex:index];
+    
+    return !item.isComplete;
+}
 - (NSString *)nameForItemAtIndex:(NSInteger)index{
     
-    return [dataArray objectAtIndex:index];
+    return ((TaskItem *)[dataArray objectAtIndex:index]).itemName;
 }
 
 - (void)onDoubleTapEditCompleteAtIndex:(NSInteger)index withItemName:(NSString *)name{
     
-    [dataArray replaceObjectAtIndex:index withObject:name];
+    TaskItem *item = [dataArray objectAtIndex:index];
+    item.itemName = name;
     
     TableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
     

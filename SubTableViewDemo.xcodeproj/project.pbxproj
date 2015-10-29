@@ -39,6 +39,7 @@
 		CE001C8B1BE0D1220062090E /* ChildTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE001C781BE0D1220062090E /* ChildTableViewCell.xib */; };
 		CE001C8C1BE0D1220062090E /* SubTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CE001C7A1BE0D1220062090E /* SubTableViewCell.m */; };
 		CE001C8D1BE0D1220062090E /* SubTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE001C7B1BE0D1220062090E /* SubTableViewCell.xib */; };
+		CE0F39381BE1D00E00795607 /* TaskItem.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0F39371BE1D00E00795607 /* TaskItem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +116,8 @@
 		CE001C791BE0D1220062090E /* SubTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubTableViewCell.h; sourceTree = "<group>"; };
 		CE001C7A1BE0D1220062090E /* SubTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubTableViewCell.m; sourceTree = "<group>"; };
 		CE001C7B1BE0D1220062090E /* SubTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubTableViewCell.xib; sourceTree = "<group>"; };
+		CE0F39361BE1D00E00795607 /* TaskItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskItem.h; sourceTree = "<group>"; };
+		CE0F39371BE1D00E00795607 /* TaskItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskItem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,6 +221,8 @@
 				CE001C471BE0D1190062090E /* TableViewCell.xib */,
 				CE001C481BE0D1190062090E /* ViewController.h */,
 				CE001C491BE0D1190062090E /* ViewController.m */,
+				CE0F39361BE1D00E00795607 /* TaskItem.h */,
+				CE0F39371BE1D00E00795607 /* TaskItem.m */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -493,6 +498,7 @@
 				CE001C801BE0D1220062090E /* DoubleTap.m in Sources */,
 				CE001C7E1BE0D1220062090E /* DTECellHolder.m in Sources */,
 				CE001C7D1BE0D1220062090E /* DoubleTapEdit.m in Sources */,
+				CE0F39381BE1D00E00795607 /* TaskItem.m in Sources */,
 				CE001C501BE0D1190062090E /* ViewController.m in Sources */,
 				CE001C891BE0D1220062090E /* ParentTableView.m in Sources */,
 				CE001C4A1BE0D1190062090E /* ChildTableCell.m in Sources */,

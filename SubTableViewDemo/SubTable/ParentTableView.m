@@ -550,25 +550,38 @@
     if(targetIndex < destIndex){
         
         offset = -1;
+        
+        //update parent index
+        for(ParentTableViewCell *cell in [self visibleCells]){
+            
+            if(cell.parentIndex > targetIndex && cell.parentIndex <= destIndex){
+                
+                cell.parentIndex += offset;
+            }
+        }
     }
     else if(targetIndex > destIndex){
         
         offset = 1;
-    }
-    
-    //update parent index
-    for(ParentTableViewCell *cell in [self visibleCells]){
         
-        if(cell.parentIndex > targetIndex && cell.parentIndex <= destIndex){
+        //update parent index
+        for(ParentTableViewCell *cell in [self visibleCells]){
             
-            cell.parentIndex += offset;
+            if(cell.parentIndex < targetIndex && cell.parentIndex >= destIndex){
+                
+                cell.parentIndex += offset;
+            }
         }
     }
+    
+    
     
     ParentTableViewCell *targetCell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:targetIndex inSection:0]];
     targetCell.parentIndex = destIndex;
     
+    
     [self moveRowAtIndexPath:[NSIndexPath indexPathForRow:targetIndex inSection:0] toIndexPath:[NSIndexPath indexPathForRow:destIndex inSection:0]];
+    
 }
 
 #pragma mark - UITableViewDataSource

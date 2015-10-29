@@ -54,6 +54,14 @@
         if(_onEdit)
             return;
         
+        if([self.delegate respondsToSelector:@selector(canStartEditAtIndex:)]){
+            
+            if(![self.delegate canStartEditAtIndex:_tappedCellIndex]){
+                
+                return;
+            }
+        }
+        
         NSString *nameForItem = @"";
         
         if([self.delegate respondsToSelector:@selector(nameForItemAtIndex:)]){

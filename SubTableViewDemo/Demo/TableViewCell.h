@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *completeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *deleteLabel;
+@property (nonatomic) BOOL isComplete;
 
 
 @end
