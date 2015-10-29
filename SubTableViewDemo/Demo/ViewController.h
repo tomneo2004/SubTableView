@@ -14,8 +14,9 @@
 #import "DoubleTapEdit.h"
 #import "LongPress.h"
 #import "PullDownAddNew.h"
+#import "LongPressMove.h"
 
-@interface ViewController : UIViewController<ParentTableViewDelegate, PanLeftRightDelegate, SingleTapDelegate, DoubleTapDelegate, LongPressDelegate, PullDownAddNewDelegate, DoubleTapEditDelegate>
+@interface ViewController : UIViewController<ParentTableViewDelegate, PanLeftRightDelegate, SingleTapDelegate, DoubleTapDelegate, LongPressDelegate, PullDownAddNewDelegate, DoubleTapEditDelegate, LongPressMoveDelegate>
 
 
 @end

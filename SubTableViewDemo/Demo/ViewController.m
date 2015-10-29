@@ -84,9 +84,14 @@
     
     [singleTap requireGestureComponentToFail:doubleTapEdit];
     
+    /*
     LongPress *longPress = [[LongPress alloc] initWithTableView:_tableView WithPriority:0];
     longPress.delegate = self;
     [_tableView addGestureComponent:longPress];
+     */
+    LongPressMove *longPressMove = [[LongPressMove alloc] initWithTableView:_tableView WithPriority:0];
+    longPressMove.delegate= self;
+    [_tableView addGestureComponent:longPressMove];
     
     PullDownAddNew *pullAddNew = [[PullDownAddNew alloc] initWithTableView:_tableView WithPriority:0];
     pullAddNew.delegate = self;
@@ -346,6 +351,23 @@
 - (void)onLongPressAtCellIndex:(NSInteger)index{
     
     NSLog(@"on long press on index %li", (long)index);
+}
+
+#pragma mark - LongPressMove delegate
+- (BOOL)canMoveItemFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex{
+    
+    TaskItem *fromItem = [dataArray objectAtIndex:fromIndex];
+    TaskItem *toItem = [dataArray objectAtIndex:toIndex];
+    
+    if(fromItem.isComplete == toItem.isComplete)
+        return YES;
+    else
+        return NO;
+}
+
+- (void)willMoveItemFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex{
+    
+    [dataArray exchangeObjectAtIndex:toIndex withObjectAtIndex:fromIndex];
 }
 
 #pragma mark - PullDownAddNew delegate

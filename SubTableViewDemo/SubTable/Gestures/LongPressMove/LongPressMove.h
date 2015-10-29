@@ -12,6 +12,7 @@
 
 @optional
 - (BOOL)canMoveItemFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
+- (void)willMoveItemFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex;
 
 @end
 
