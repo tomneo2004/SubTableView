@@ -625,6 +625,7 @@
         SubTableViewCell *subCell = (SubTableViewCell *)[_theDelegate tableView:self subCellRowUnderParentIndex:parentIndex];
         subCell.parentIndex = parentIndex;
         subCell.delegate = self;
+        [subCell reloadData];
         
         return subCell;
     }

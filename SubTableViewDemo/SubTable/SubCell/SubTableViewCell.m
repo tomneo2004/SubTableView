@@ -29,6 +29,12 @@
     // Configure the view for the selected state
 }
 
+#pragma mark - Public interface
+- (void)reloadData{
+    
+    [_subTableView reloadData];
+}
+
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     

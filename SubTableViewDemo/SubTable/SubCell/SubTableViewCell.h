@@ -26,4 +26,6 @@
 @property (weak, nonatomic) IBOutlet UITableView *subTableView;
 @property (weak, nonatomic) id<SubTableViewCellDelegate> delegate;
 
+- (void)reloadData;
+
 @end

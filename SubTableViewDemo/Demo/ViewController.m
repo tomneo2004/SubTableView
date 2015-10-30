@@ -135,7 +135,6 @@
     
     cell.isComplete = item.isComplete;
     
-    
     return cell;
     
 }
@@ -211,8 +210,8 @@
         cell = (ChildTableCell *)[_tableView cellViewFromNib:@"ChildTableCell" atViewIndex:0];
     }
     
-    cell.titleLabel.text = @"Menu cell";
-    
+    TaskItem *item = [dataArray objectAtIndex:parentIndex];
+    cell.titleLabel.text = [NSString stringWithFormat:@"Menu cell for %@", item.itemName];
     return cell;
 }
 

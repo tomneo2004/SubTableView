@@ -14,6 +14,7 @@
     UIView *_snapshot;
     NSInteger _sourceIndex;
     BOOL _canMove;
+    BOOL _isInAdjusting;
 }
 
 - (id)initWithTableView:(ParentTableView *)tableView WithPriority:(NSInteger)priority{
@@ -21,6 +22,7 @@
     if(self = [super initWithTableView:tableView WithPriority:priority]){
         
         _canMove = NO;
+        _isInAdjusting = NO;
         
         UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPress:)];
         [self addGestureRecognizer:recognizer WithDelegate:self];
@@ -68,8 +70,10 @@
     
     if(recognizer.state == UIGestureRecognizerStateBegan){
         
+
         ParentTableViewCell *cell = [_tableView findCellByTouchPoint:location];
         _sourceIndex = cell.parentIndex;
+        
         
         _snapshot = [self customSnapshoFromView:cell];
         
@@ -78,23 +82,26 @@
         _snapshot.alpha = 0.0f;
         [_tableView addSubview:_snapshot];
         
+        cell.alpha = 0.0f;
+        cell.hidden = YES;
+        
         [UIView animateWithDuration:0.25f animations:^{
         
             center.y = location.y;
             _snapshot.center = center;
             _snapshot.transform = CGAffineTransformMakeScale(1.55f, 1.55f);
             _snapshot.alpha = 0.98f;
-            cell.alpha = 0.0f;
             
         } completion:^(BOOL finished){
         
-            cell.hidden = YES;
             _canMove = YES;
         }];
+        
     }
     
-    if(recognizer.state == UIGestureRecognizerStateChanged && _canMove){
+    if(recognizer.state == UIGestureRecognizerStateChanged && _canMove && !_isInAdjusting){
         
+
         CGPoint center = _snapshot.center;
         center.y = location.y;
         _snapshot.center = center;
@@ -113,9 +120,15 @@
                         
                         [self.delegate willMoveItemFromIndex:_sourceIndex toIndex:destIndex];
                         
+                        [_tableView beginUpdates];
+                        
                         [_tableView moveRowAtIndex:_sourceIndex toIndex:destIndex];
                         
                         _sourceIndex = destIndex;
+                        
+                        //[self adjustView:recognizer];
+                        
+                        [_tableView endUpdates];
                         
                     }
                 }
@@ -124,15 +137,17 @@
         }
         
 
-        [self adjustView:recognizer];
+        
     }
     
     if(recognizer.state == UIGestureRecognizerStateEnded && _canMove){
+        
         
         ParentTableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_sourceIndex inSection:0]];
         cell.hidden = NO;
         cell.alpha = 0.0f;
         
+
         [UIView animateWithDuration:0.25f animations:^{
             
             _snapshot.center = cell.center;
@@ -142,11 +157,17 @@
             
         } completion:^(BOOL finished) {
             
+            _canMove = NO;
+            
+            cell.hidden = NO;
+            cell.alpha = 1.0f;
+            
             [_snapshot removeFromSuperview];
             _snapshot = nil;
             
         }];
     }
+    
     
 }
 
@@ -164,7 +185,7 @@
             
             if((_sourceIndex+1) <= (rows-1)){
                 
-
+                _isInAdjusting = YES;
                 [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_sourceIndex+1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
             }
         }
@@ -176,7 +197,7 @@
             
             if((_sourceIndex-1) >= 0){
                 
-
+                _isInAdjusting= YES;
                 [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_sourceIndex-1 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
             }
         }
@@ -184,7 +205,11 @@
     }
 }
 
-
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+    
+    if(_isInAdjusting == YES)
+        _isInAdjusting = NO;
+}
 
 - (UIView *)customSnapshoFromView:(UIView *)inputView {
     

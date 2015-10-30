@@ -41,6 +41,7 @@
 		CE001C8D1BE0D1220062090E /* SubTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE001C7B1BE0D1220062090E /* SubTableViewCell.xib */; };
 		CE0F39381BE1D00E00795607 /* TaskItem.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0F39371BE1D00E00795607 /* TaskItem.m */; };
 		CE0F393D1BE20C8E00795607 /* LongPressMove.m in Sources */ = {isa = PBXBuildFile; fileRef = CE0F393C1BE20C8E00795607 /* LongPressMove.m */; };
+		CEFE27011BE31102008A9DBE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEFE27001BE31102008A9DBE /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,6 +122,7 @@
 		CE0F39371BE1D00E00795607 /* TaskItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskItem.m; sourceTree = "<group>"; };
 		CE0F393B1BE20C8E00795607 /* LongPressMove.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LongPressMove.h; sourceTree = "<group>"; };
 		CE0F393C1BE20C8E00795607 /* LongPressMove.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LongPressMove.m; sourceTree = "<group>"; };
+		CEFE27001BE31102008A9DBE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEFE27011BE31102008A9DBE /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,6 +154,7 @@
 		CE001BFE1BE0D04D0062090E = {
 			isa = PBXGroup;
 			children = (
+				CEFE27001BE31102008A9DBE /* QuartzCore.framework */,
 				CE001C091BE0D04D0062090E /* SubTableViewDemo */,
 				CE001C231BE0D04D0062090E /* SubTableViewDemoTests */,
 				CE001C2E1BE0D04D0062090E /* SubTableViewDemoUITests */,
