@@ -75,7 +75,9 @@
             [_tableView.superview addSubview:_cellHolder];
             
             _maskView.frame = CGRectMake(0, 0, _tableView.bounds.size.width, _tableView.bounds.size.height);
-            [_tableView insertSubview:_maskView atIndex:1];
+            [_tableView.superview addSubview:_maskView];
+            
+            [_tableView.superview bringSubviewToFront:_cellHolder];
         }
         
         [_tableView bringSubviewToFront:_cellHolder];

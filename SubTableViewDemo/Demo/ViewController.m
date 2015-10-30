@@ -366,7 +366,8 @@
 
 - (void)willMoveItemFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex{
     
-    [dataArray exchangeObjectAtIndex:toIndex withObjectAtIndex:fromIndex];
+    [dataArray exchangeObjectAtIndex:fromIndex withObjectAtIndex:toIndex];
+ 
 }
 
 #pragma mark - PullDownAddNew delegate

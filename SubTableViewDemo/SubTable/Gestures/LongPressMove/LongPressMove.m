@@ -14,7 +14,6 @@
     UIView *_snapshot;
     NSInteger _sourceIndex;
     BOOL _canMove;
-    BOOL _isInAdjusting;
 }
 
 - (id)initWithTableView:(ParentTableView *)tableView WithPriority:(NSInteger)priority{
@@ -22,7 +21,7 @@
     if(self = [super initWithTableView:tableView WithPriority:priority]){
         
         _canMove = NO;
-        _isInAdjusting = NO;
+
         
         UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPress:)];
         [self addGestureRecognizer:recognizer WithDelegate:self];
@@ -67,103 +66,117 @@
     
     CGPoint location = [recognizer locationInView:_tableView];
     
-    
-    if(recognizer.state == UIGestureRecognizerStateBegan){
-        
-
-        ParentTableViewCell *cell = [_tableView findCellByTouchPoint:location];
-        _sourceIndex = cell.parentIndex;
-        
-        
-        _snapshot = [self customSnapshoFromView:cell];
-        
-        __block CGPoint center = cell.center;
-        _snapshot.center = center;
-        _snapshot.alpha = 0.0f;
-        [_tableView addSubview:_snapshot];
-        
-        cell.alpha = 0.0f;
-        cell.hidden = YES;
-        
-        [UIView animateWithDuration:0.25f animations:^{
-        
-            center.y = location.y;
+    switch (recognizer.state) {
+        case UIGestureRecognizerStateBegan:{
+            
+            ParentTableViewCell *cell = [_tableView findCellByTouchPoint:location];
+            _sourceIndex = cell.parentIndex;
+            
+            
+            _snapshot = [self customSnapshoFromView:cell];
+            
+            __block CGPoint center = cell.center;
             _snapshot.center = center;
-            _snapshot.transform = CGAffineTransformMakeScale(1.55f, 1.55f);
-            _snapshot.alpha = 0.98f;
+            _snapshot.alpha = 0.0f;
+            [_tableView addSubview:_snapshot];
             
-        } completion:^(BOOL finished){
-        
-            _canMove = YES;
-        }];
-        
-    }
-    
-    if(recognizer.state == UIGestureRecognizerStateChanged && _canMove && !_isInAdjusting){
-        
-
-        CGPoint center = _snapshot.center;
-        center.y = location.y;
-        _snapshot.center = center;
-        
-        ParentTableViewCell *cell = [_tableView cellForRowAtIndexPath:[_tableView indexPathForRowAtPoint:location]];
-        
-        if(_sourceIndex != cell.parentIndex){
+            cell.alpha = 0.0f;
+            cell.hidden = YES;
             
-            if([self.delegate respondsToSelector:@selector(canMoveItemFromIndex:toIndex:)]){
+            [UIView animateWithDuration:0.25f animations:^{
                 
-                if([self.delegate canMoveItemFromIndex:_sourceIndex toIndex:cell.parentIndex]){
-                    
-                    if([self.delegate respondsToSelector:@selector(willMoveItemFromIndex:toIndex:)]){
-                        
-                        NSInteger destIndex = cell.parentIndex;
-                        
-                        [self.delegate willMoveItemFromIndex:_sourceIndex toIndex:destIndex];
-                        
-                        [_tableView moveRowAtIndex:_sourceIndex toIndex:destIndex];
-                        
-                        _sourceIndex = destIndex;
-                        
-                        //[self adjustView:recognizer];
-                        
-                        
-                    }
-                }
-            }
+                center.y = location.y;
+                _snapshot.center = center;
+                _snapshot.transform = CGAffineTransformMakeScale(1.55f, 1.55f);
+                _snapshot.alpha = 0.98f;
+                
+            } completion:^(BOOL finished){
+                
+                _canMove = YES;
+            }];
             
+            break;
         }
         
-    }
-    
-    if(recognizer.state == UIGestureRecognizerStateEnded && _canMove){
-        
-        
-        ParentTableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_sourceIndex inSection:0]];
-        cell.hidden = NO;
-        cell.alpha = 0.0f;
-        
-
-        [UIView animateWithDuration:0.25f animations:^{
+        case UIGestureRecognizerStateChanged:{
             
-            _snapshot.center = cell.center;
-            _snapshot.transform = CGAffineTransformIdentity;
-            _snapshot.alpha = 0.0;
-            cell.alpha = 1.0;
+            if(!_canMove){
+                
+                break;
+            }
             
-        } completion:^(BOOL finished) {
+            CGPoint center = _snapshot.center;
+            center.y = location.y;
+            _snapshot.center = center;
             
-            _canMove = NO;
+            ParentTableViewCell *cell = [_tableView cellForRowAtIndexPath:[_tableView indexPathForRowAtPoint:location]];
+            NSInteger destIndex = -1;
             
+            if(cell != nil){
+                
+                destIndex = cell.parentIndex;
+            }
+            
+            if(_sourceIndex != cell.parentIndex && destIndex >= 0){
+                
+                if([self.delegate respondsToSelector:@selector(canMoveItemFromIndex:toIndex:)]){
+                    
+                    if([self.delegate canMoveItemFromIndex:_sourceIndex toIndex:cell.parentIndex]){
+                        
+                        if([self.delegate respondsToSelector:@selector(willMoveItemFromIndex:toIndex:)]){
+                            
+                            
+                            [self.delegate willMoveItemFromIndex:_sourceIndex toIndex:destIndex];
+                            
+                            [_tableView moveRowAtIndex:_sourceIndex toIndex:destIndex];
+                            
+                            _sourceIndex = destIndex;
+                            
+                            
+                        }
+                    }
+                }
+                
+            }
+            
+            [self adjustView:recognizer];
+            
+            break;
+        }
+            
+        default:{
+            
+            
+            ParentTableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_sourceIndex inSection:0]];
             cell.hidden = NO;
-            cell.alpha = 1.0f;
+            cell.alpha = 0.0f;
             
-            [_snapshot removeFromSuperview];
-            _snapshot = nil;
             
-        }];
+            [UIView animateWithDuration:0.25f animations:^{
+                
+                _snapshot.center = cell.center;
+                _snapshot.transform = CGAffineTransformIdentity;
+                _snapshot.alpha = 0.0;
+                cell.alpha = 1.0;
+                
+            } completion:^(BOOL finished) {
+                
+                _canMove = NO;
+                
+                cell.hidden = NO;
+                cell.alpha = 1.0f;
+                
+                [_snapshot removeFromSuperview];
+                _snapshot = nil;
+                
+                [_tableView reloadData];
+            }];
+            
+            break;
+        }
     }
     
-    
+
 }
 
 - (void)adjustView:(UILongPressGestureRecognizer *)recognizer{
@@ -173,26 +186,24 @@
         CGPoint location = [recognizer locationInView:_tableView];
         NSInteger rows = [_tableView numberOfRowsInSection:0];
         
-        CGFloat snapshotBottomEdge = location.y + _snapshot.bounds.size.height;
+        CGFloat snapshotBottomEdge = location.y + _snapshot.bounds.size.height *0.5f;
         CGFloat visibleBottomEdge = _tableView.contentOffset.y + _tableView.bounds.size.height;
         
         if(snapshotBottomEdge > visibleBottomEdge){
             
             if((_sourceIndex+1) <= (rows-1)){
                 
-                _isInAdjusting = YES;
                 [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_sourceIndex+1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
             }
         }
         
-        CGFloat snapshotTopEdge = location.y - _snapshot.bounds.size.height;
+        CGFloat snapshotTopEdge = location.y - _snapshot.bounds.size.height *0.5f;
         CGFloat visibleTopEdge = _tableView.contentOffset.y;
         
         if(snapshotTopEdge < visibleTopEdge){
             
             if((_sourceIndex-1) >= 0){
                 
-                _isInAdjusting= YES;
                 [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_sourceIndex-1 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
             }
         }
@@ -200,11 +211,6 @@
     }
 }
 
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
-    
-    if(_isInAdjusting == YES)
-        _isInAdjusting = NO;
-}
 
 - (UIView *)customSnapshoFromView:(UIView *)inputView {
     
