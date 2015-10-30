@@ -276,18 +276,18 @@
 
 - (BOOL)canPanRightAtCellIndex:(NSInteger)index{
     
-    TaskItem *item = [dataArray objectAtIndex:index];
-    
-    if(item.isComplete){
-        
-        return NO;
-    }
-    
     return YES;
 }
 
 - (void)onPanLeftAtCellIndex:(NSInteger)index{
     
+    NSLog(@"delete at index %li", (long)index);
+    
+    [dataArray removeObjectAtIndex:index];
+    [_tableView deleteRowAtIndex:index withAnimation:UITableViewRowAnimationFade];
+}
+
+- (void)onPanRightAtCellIndex:(NSInteger)index{
     
     
     TaskItem *item = [dataArray objectAtIndex:index];
@@ -309,28 +309,20 @@
     }
     else{
         
-        NSLog(@"delete at index %li", (long)index);
+        NSLog(@"complete at index %li", (long)index);
         
+        id obj = [dataArray objectAtIndex:index];
+        ((TaskItem *)obj).isComplete = YES;
         [dataArray removeObjectAtIndex:index];
-        [_tableView deleteRowAtIndex:index withAnimation:UITableViewRowAnimationFade];
+        [dataArray addObject:obj];
+        
+        TableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+        cell.isComplete = YES;
+        
+        
+        [_tableView moveRowAtIndex:index toIndex:[dataArray count]-1];
     }
     
-}
-
-- (void)onPanRightAtCellIndex:(NSInteger)index{
-    
-    NSLog(@"complete at index %li", (long)index);
-    
-    id obj = [dataArray objectAtIndex:index];
-    ((TaskItem *)obj).isComplete = YES;
-    [dataArray removeObjectAtIndex:index];
-    [dataArray addObject:obj];
-    
-    TableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
-    cell.isComplete = YES;
-    
-    
-    [_tableView moveRowAtIndex:index toIndex:[dataArray count]-1];
     
 }
 
