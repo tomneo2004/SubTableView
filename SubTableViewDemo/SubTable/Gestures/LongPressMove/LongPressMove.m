@@ -120,23 +120,18 @@
                         
                         [self.delegate willMoveItemFromIndex:_sourceIndex toIndex:destIndex];
                         
-                        [_tableView beginUpdates];
-                        
                         [_tableView moveRowAtIndex:_sourceIndex toIndex:destIndex];
                         
                         _sourceIndex = destIndex;
                         
                         //[self adjustView:recognizer];
                         
-                        [_tableView endUpdates];
                         
                     }
                 }
             }
             
         }
-        
-
         
     }
     
