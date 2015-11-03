@@ -26,6 +26,8 @@
         _cellHolder.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _maskView = [[UIView alloc] initWithFrame:CGRectNull];
         _maskView.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.5f];
+        UIGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapMaskView)];
+        [_maskView addGestureRecognizer:gesture];
         _cellHolder.delegate = self;
         
         UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onDoubleTap:)];
@@ -123,6 +125,12 @@
     
     //single tap only happen when tableView is not in edit mode, tap on parent cell and parent cell can not be expanded
     return YES;
+}
+
+#pragma mark - internal
+- (void)onTapMaskView{
+    
+    [self endEditWithText:@""];
 }
 
 #pragma mark - DTECellHolder delegate

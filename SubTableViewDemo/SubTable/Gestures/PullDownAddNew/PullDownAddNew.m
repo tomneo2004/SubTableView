@@ -30,6 +30,8 @@
         _cellHolder.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _maskView = [[UIView alloc] initWithFrame:CGRectNull];
         _maskView.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.5f];
+        UIGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapMaskView)];
+        [_maskView addGestureRecognizer:gesture];
         _cellHolder.delegate = self;
     }
     
@@ -106,8 +108,8 @@
         
         _maskView.frame = CGRectMake(0, 0, _tableView.bounds.size.width, _tableView.bounds.size.height);
         
-        [_tableView insertSubview:_maskView atIndex:1];
-        [_tableView bringSubviewToFront:_cellHolder];
+        [_tableView.superview insertSubview:_maskView atIndex:1];
+        [_tableView.superview bringSubviewToFront:_cellHolder];
         [_cellHolder startEdit];
     }
     else{
@@ -116,6 +118,12 @@
     }
     
     _pullDownInProgress = NO;
+}
+
+#pragma mark - internal
+- (void)onTapMaskView{
+    
+    [self endEditWithText:@""];
 }
 
 #pragma mark - PDANCellHolder delegate
