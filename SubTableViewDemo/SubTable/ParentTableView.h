@@ -56,6 +56,16 @@
 
 @optional
 /**
+ * Notify when tableView about to enter edit mode
+ */
+- (void)tableViewWillEnterEditMode:(ParentTableView *)tableView;
+
+/**
+ * Notify when tableView about to exist edit mode
+ */
+- (void)tableViewWillExitEditMode:(ParentTableView *)tableView;
+
+/**
  * Parent cell height at index default is 44
  */
 - (CGFloat)tableView:(ParentTableView *)tableView parentCellHeightForRowAtIndex:(NSInteger )index;
@@ -93,6 +103,10 @@
 - (void)tableView:(ParentTableView *)tableView didCollapseForParentCellAtIndex:(NSInteger)index withSubCellIndex:(NSInteger)subIndex;
 
 //- (void)tableView:(UITableView *)tableView didSelectRowAtChildIndex:(NSInteger)childIndex underParentIndex:(NSInteger)parentIndex;
+
+/**
+ * Child cell height at child index under parent index
+ */
 - (CGFloat)tableView:(UITableView *)tableView childCellHeightForRowAtChildIndex:(NSInteger)childIndex underParentIndex:(NSInteger)parentIndex;
 
 @end
@@ -119,6 +133,11 @@
  * YES to make tableView interactable otherwise NO
  */
 @property (setter=setInteractionEnable:, nonatomic) BOOL interactionEnable;
+
+/**
+ * Return last expand parent index otherwise negative value
+ */
+@property (getter=getLastExpandParentIndex, nonatomic) NSInteger lastExpandParentIndex;
 
 /**
  * Collapse all parent cells
