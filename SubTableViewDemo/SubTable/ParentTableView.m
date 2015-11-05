@@ -90,6 +90,11 @@
         return;
     }
     
+    if([_theDelegate respondsToSelector:@selector(tableView:willExpandForParentCellAtIndex:withSubCellIndex:)]){
+        
+        [_theDelegate tableView:self willExpandForParentCellAtIndex:parentIndex withSubCellIndex:row+1];
+    }
+    
     // update expansionStates so backing data is ready before calling insertRowsAtIndexPaths
     [_expansionStates replaceObjectAtIndex:parentIndex withObject:@"YES"];
     [self insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:(row + 1) inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
@@ -121,6 +126,11 @@
     //if it is already collapsed then return
     if (![[_expansionStates objectAtIndex:parentIndex] boolValue]) {
         return;
+    }
+    
+    if([_theDelegate respondsToSelector:@selector(tableView:willCollapseForParentCellAtIndex:withSubCellIndex:)]){
+        
+        [_theDelegate tableView:self willCollapseForParentCellAtIndex:parentIndex withSubCellIndex:row+1];
     }
     
     // update expansionStates so backing data is ready before calling deleteRowsAtIndexPaths

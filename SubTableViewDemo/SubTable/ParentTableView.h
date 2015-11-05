@@ -73,9 +73,19 @@
 //- (void)tableView:(ParentTableView *)tableView didSelectRowAtIndex:(NSInteger)index;
 
 /**
+ * Will expand Parent cell at index
+ */
+- (void)tableView:(ParentTableView *)tableView willExpandForParentCellAtIndex:(NSInteger)index withSubCellIndex:(NSInteger)subIndex;
+
+/**
  * Parent cell expend at index
  */
 - (void)tableView:(ParentTableView *)tableView didExpandForParentCellAtIndex:(NSInteger)index withSubCellIndex:(NSInteger)subIndex;
+
+/**
+ * Will collapse Parent cell at index
+ */
+- (void)tableView:(ParentTableView *)tableView willCollapseForParentCellAtIndex:(NSInteger)index withSubCellIndex:(NSInteger)subIndex;
 
 /**
  * Parent cell collapse at index
