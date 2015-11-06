@@ -92,6 +92,9 @@
         return;
     }
     
+    //set last expand parent index
+    _lastExpendParentIndex = parentIndex;
+    
     if([_theDelegate respondsToSelector:@selector(tableView:willExpandForParentCellAtIndex:withSubCellIndex:)]){
         
         [_theDelegate tableView:self willExpandForParentCellAtIndex:parentIndex withSubCellIndex:row+1];
@@ -118,7 +121,7 @@
         [_theDelegate tableView:self didExpandForParentCellAtIndex:parentIndex withSubCellIndex:row+1];
     }
     
-    _lastExpendParentIndex = parentIndex;
+    
 }
 
 - (void)collapseForParentAtRow:(NSInteger)row {
