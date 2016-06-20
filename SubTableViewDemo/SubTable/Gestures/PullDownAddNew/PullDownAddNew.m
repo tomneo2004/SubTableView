@@ -59,9 +59,10 @@
     
     ParentTableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     
+    
     if(cell == nil){
         
-        _pullDownInProgress = NO;
+        _pullDownInProgress = YES;
     }
     
     /*
@@ -74,6 +75,9 @@
     if(_pullDownInProgress && defaultRowHeight < 0){
         
         defaultRowHeight = cell.bounds.size.height;
+        
+        if(cell == nil)
+            defaultRowHeight = _cellHolder.bounds.size.height;
     
     }
     
