@@ -140,6 +140,11 @@
 @property (getter=getLastExpandParentIndex, nonatomic) NSInteger lastExpandParentIndex;
 
 /**
+ * Tell table to reload data
+ */
+- (void)reloadTableData;
+
+/**
  * Collapse all parent cells
  */
 - (void)collapseAllRows;
