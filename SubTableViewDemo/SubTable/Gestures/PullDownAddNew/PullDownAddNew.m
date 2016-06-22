@@ -59,11 +59,12 @@
     
     ParentTableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     
-    
+    /*
     if(cell == nil){
         
         _pullDownInProgress = YES;
     }
+     */
     
     /*
     if(_pullDownInProgress && _tableView.isOnEdit){
