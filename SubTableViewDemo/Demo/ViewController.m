@@ -305,7 +305,7 @@
         TableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         cell.isComplete = NO;
         
-        [_tableView moveRowAtIndex:index toIndex:0];
+        [_tableView moveRowAtIndex:index toIndex:0 onComplete:nil];
     }
     else{
         
@@ -320,7 +320,7 @@
         cell.isComplete = YES;
         
         
-        [_tableView moveRowAtIndex:index toIndex:[dataArray count]-1];
+        [_tableView moveRowAtIndex:index toIndex:[dataArray count]-1 onComplete:nil];
     }
     
     
